@@ -51,7 +51,7 @@ print(cleanedBody)
 				Content: cleanedBody,
 			},
 		},
-		AgentID: utils.GetAPIKey(),
+		AgentID: "ag:1b69b193:20250131:webscrapper:105fca8c",
 	}
 	payloadBytes,err:=json.Marshal(payload)
 	if err!=nil{
@@ -62,7 +62,7 @@ print(cleanedBody)
 		fmt.Println("Error with making http request object")
 	}
 	req.Header.Set("Content-Type","application/json")
-	req.Header.Set("Authorization", "Bearer ADRiKpjC1ss6ud6RmuQ1rbAdzU3pA0gR")
+	req.Header.Set("Authorization", "Bearer "+ utils.GetAPIKey())
 
 	client:=&http.Client{}
 	res,err:=client.Do(req)
