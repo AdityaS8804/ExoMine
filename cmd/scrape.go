@@ -8,12 +8,13 @@ import (
 
 
 var scrapeCmd=&cobra.Command{
-	Use:"scrape [url]",
+	Use:"scrape [url] [json]",
 	Short:"To scrape details from the given link",
-	Args:cobra.ExactArgs(1),
+	Args:cobra.ExactArgs(2),
 	Run:func(cmd *cobra.Command, args []string){
 		url:=args[0]
-		scraper.ScrapeURL(url)
+		JsonFormat:=args[1]
+		scraper.ScrapeURL(url,JsonFormat)
 	},
 }
 

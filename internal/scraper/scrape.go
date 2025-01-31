@@ -1,52 +1,21 @@
 package scraper
 
 import (
-	"encoding/csv"
 	"fmt"
-	"log"
-	"os"
 
 	"github.com/gocolly/colly"
+
+	"github.com/AdityaS8804/ExoMine.git/internal/processor"
 )
 type Product struct{
 	Url, Image,Name,Price string
 }
 
-func ScrapeURL(url string){
-	fmt.Println("App Started...")
-	var products []Product
+func ScrapeURL(url string,JsonFormat string){
+	fmt.Println("Getting Response...")
 	c:=colly.NewCollector()
-	c.OnHTML(".product",func(r *colly.HTMLElement){
-		product:=Product{
-			Url:r.ChildAttr("a","href"),
-			Image:r.ChildAttr("img","src"),
-			Name:r.ChildText(".product-name"),
-			Price:r.ChildText(".price"),
-		}
-		products=append(products,product)
-	})
-	c.OnScraped(func(r *colly.Response){
-		file,err:=os.Create("WebScraped.csv")
-		if err!=nil{
-			log.Fatalln("Failed to create output csv")
-		}
-		defer file.Close()
-		writer:=csv.NewWriter(file)
-		writer.Write([]string{
-			"Url",
-			"Image",
-			"Name",
-			"Price",
-		})
-		for _,product := range products{
-			writer.Write([]string{
-				product.Url,
-				product.Image,
-				product.Name,
-				product.Price,
-			})
-		}
-		defer writer.Flush()
+	c.OnResponse(func(r *colly.Response){
+		processor.LLMFetch(r.Body,JsonFormat)
 	})
 	c.Visit(url)
 }
