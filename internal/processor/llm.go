@@ -70,7 +70,13 @@ func processResponse(res *http.Response){
 		fmt.Println("Error in unmarshalling to json")
 	}
 	if len(responsePayload.Choices)>0{
-		fmt.Println(getJSON(responsePayload.Choices[0].Message.Content))
+		//fmt.Println(getJSON(responsePayload.Choices[0].Message.Content))
+		JSON_str:=getJSON(responsePayload.Choices[0].Message.Content)
+		data,err:=json.Marshal(JSON_str)
+		if err!=nil{
+			fmt.Println("Error in marshaling JSON")
+		}
+		print(string(data))
 	}
 
 }
