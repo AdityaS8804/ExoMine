@@ -199,5 +199,8 @@ pattern := `(?s)` + "```json\n(.*?)```"
 re := regexp.MustCompile(pattern)
 
 matches := re.FindStringSubmatch(content)
+if len(matches)<2{
+	return ""
+}
 return matches[1]
 }
