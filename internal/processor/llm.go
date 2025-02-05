@@ -32,20 +32,22 @@ type ResponsePayload struct {
 	} `json:"choices"`
 }
 
-func LLMFetch(body []byte,JsonFormat string){
+func LLMFetch(body []byte,JsonFormat string) string{
 	req:=postLLM(body,JsonFormat) //return a request object
 	client:=&http.Client{}
 	res,err:=client.Do(req)//sends the request and gets response
 	if err!=nil{
 		fmt.Println("Error getting response")
 	}
+	var jsonVal string
 	defer res.Body.Close()
 	switch res.StatusCode {
 	case http.StatusOK: // 200
 		fmt.Println("Success: Status 200 OK")
-		processResponse(res)//processes the response
+		jsonVal=processResponse(res)//processes the response
 	case http.StatusUnprocessableEntity: // 422
 		fmt.Println("Error: Status 422 Unprocessable Entity")
+		jsonVal="null"
 	default:
 		fmt.Printf("Unexpected status code: %d\n", res.StatusCode)
 		failedBody,err:=io.ReadAll(res.Body)
@@ -53,12 +55,11 @@ func LLMFetch(body []byte,JsonFormat string){
 			fmt.Println("Error in default case")
 		}
 		fmt.Println(string(failedBody))
+		jsonVal="null"
 	}
-
-
-	
+	return jsonVal
 }
-func processResponse(res *http.Response){
+func processResponse(res *http.Response) string{
 		resBody, err:=io.ReadAll(res.Body)
 		
 	if err!=nil{
@@ -72,12 +73,10 @@ func processResponse(res *http.Response){
 	if len(responsePayload.Choices)>0{
 		//fmt.Println(getJSON(responsePayload.Choices[0].Message.Content))
 		JSON_str:=getJSON(responsePayload.Choices[0].Message.Content)
-		data,err:=json.Marshal(JSON_str)
-		if err!=nil{
-			fmt.Println("Error in marshaling JSON")
-		}
-		print(string(data))
+		//print(string(data))
+		return JSON_str
 	}
+	return ""
 
 }
 func postLLM(body []byte,JsonFormat string) *http.Request{

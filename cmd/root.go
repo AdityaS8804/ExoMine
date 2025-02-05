@@ -17,6 +17,6 @@ return rootCmd.Execute()
 func init(){
 scrapeCmd.Flags().StringP("url","u","","URL of website to be scraped")
 scrapeCmd.Flags().StringP("format","f","","JSON format expected by the user")
-
+scrapeCmd.Flags().StringP("save","s","","Save to a file")
 rootCmd.AddCommand(scrapeCmd)
 }
