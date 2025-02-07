@@ -32,7 +32,15 @@ var scrapeCmd=&cobra.Command{
 		JsonFormat:=readJSONFile(format)
 		data:=scraper.ScrapeURL(url,JsonFormat)
 		if save!=""{
+			re:=regexp.MustCompile(`\.([^.]+)$`)
+			extension:=re.FindStringSubmatch(save)
+			if extension[1]=="csv"{
 			saveCsv(data,save)
+			}else if extension[1]=="json"{
+				saveJSON(data,save)
+			}else{
+				log.Fatalf("Please give proper file extension (csv/json) : %s",extension[1])
+			}
 		}else{
 			fmt.Println(data)
 		}
@@ -57,6 +65,19 @@ func splitLines(data string) string {
 	}
 	return strings.Join(lines, "")
 }
+func saveJSON(JSON_str string, filepath string){
+
+file,err:=os.Create(filepath)
+if err!=nil{
+	log.Fatal("Error in creating json file")
+}
+writer:=json.NewEncoder(file)
+writer.Encode(JSON_str)
+}
+
+
+
+
 func saveCsv(JSON_str string,filepath string){
 	JSON_str="{\n"+JSON_str+"\n}"
 		// Regex to match the unquoted "response"

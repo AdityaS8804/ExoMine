@@ -40,13 +40,3 @@ func ScrapeURL(url string,JsonFormat string)string{
 
 	
 }
-/*
-func ScrapeURL(url string,JsonFormat string){
-	fmt.Println("Getting Response...")
-	c:=colly.NewCollector()
-	c.OnResponse(func(r *colly.Response){
-		processor.LLMFetch(r.Body,JsonFormat)
-	})
-	c.Visit(url)
-}
-	*/

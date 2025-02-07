@@ -7,7 +7,6 @@ import (
 	"github.com/AdityaS8804/ExoMine.git/cmd"
 )
 
-
 func main(){
 	if err:=cmd.Execute();err!=nil{
 		fmt.Println(err)
